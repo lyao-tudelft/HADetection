@@ -1,3 +1,10 @@
+%% Project simulation.
+% This file simulates all the procedure that a message frame may go through
+% in the project, including its generation, baseband modulation, passing 
+% through a multipath fading channel, reception in SDR dongle,
+% demodulation, channel estimation and nullifying, while channel estimation
+% and nullifying remains unfinished.
+
 %% Configurations for Rician multi-path channel
 sampleRate50MHz = 50e6;              % Sample rate of 50M Hz
 sampleRate500KHz = 500e3;            % Sample rate of 500K Hz
@@ -85,10 +92,8 @@ signal  = real(signal_bb).*cos(2*pi*fc*t') - 1i.*imag(signal_bb).*sin(2*pi*fc*t'
 [signal_out1,~] = ricChan1(signal);     % Signal from Tx antenna 1
 sdr_out1 = sdr(signal_out1, fc, ricChan1.SampleRate);
 msg_out1 = demodulator(sdr_out1);
-plotTime(msg, Rs);
-plotTime(msg_out1, Rs);
 
-% figure('Name','OUT Message, Signal, snd SDR out signal');
+% figure('Name','OUT Message, Signal, and SDR out signal');
 % subplot(3,1,2);
 % plotSpectrum(signal_out1,Rs);
 % subplot(3,1,1);
@@ -134,7 +139,7 @@ end
 % Least square estimation for CSI
 % H = vectorReceive*vectorTrain'*inv(vectorTrain*vectorTrain');
 
-% %% Pre-coding
+%% Pre-coding
 % % msg_n = -h1./h2.*msg;         % Pre-coding
 % signal_n = -h1./h2.*signal;
 % 
