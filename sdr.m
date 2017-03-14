@@ -12,7 +12,7 @@ in_t = real(in).*exp(-1i*2*pi*fc*t) + 1i*imag(in).*exp(-1i*2*pi*fc*t);
 
 % Low pass filter design
 Wp = 0.8/2*fs*2*pi/fs/pi;               % Cut-off frequency normalized by Nyquist frequency
-Ws = 0.5*fs*2*pi/fs/pi;                 % Stop band corner frequency
+Ws = 0.499*fs*2*pi/fs/pi;                 % Stop band corner frequency
 Rp = 0.1;                               % Max passband loss in dB
 Rs = 30;                                % Stopband attenuation in dB
 [n, Wp] = cheb1ord(Wp, Ws, Rp, Rs);     % Chebyshev filter design
