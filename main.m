@@ -62,16 +62,20 @@ demodulator = comm.QPSKDemodulator( ...
     'PhaseOffset',  pi/4, ...
     'BitOutput',    true);
 
-%% Generate a frame of message with 100bits per frame
+%% Generate a sequency of message who contains nFrame frames 
 % payloadLen = 100; frameLength = payloadLen*2;
 frameLength = 100;
+nFrame = 10;
+msgLength = nFrame*frameLength;
 rb = fs;           % Bit rate
 Tb = 1/rb;                             % Duration of per bit
 Lb = round(Tb*fs);    % Length of per bit after sampling
-msg = zeros(frameLength*Lb, 1);
+frame = zeros(frameLength*Lb, 1);
+msg = zeros(msgLength*Lb, 1);
 for k = 1:frameLength
-    msg( (k-1)*Lb+1:k*Lb ) = randi([0,1],1);
+    frame( (k-1)*Lb+1:k*Lb ) = randi([0,1],1);
 end
+msg = repmat(frame, nFrame, 1);
 
 % constellation(modulator);
 % plotTime(msg, fs);
@@ -83,26 +87,26 @@ t = 0:1/fs:(length(signal_bb)-1)/fs;
 % signal  = real(signal_bb).*cos(2*pi*fc*t') - 1i.*imag(signal_bb).*sin(2*pi*fc*t');   % Signal has been transated to carrier frequency
 signal = signal_bb.*cos(2*pi*fc*t');
 
-figure('Name','Message and Signal');
-subplot(3,1,1);
-plotSpectrum(msg,fs);
-subplot(3,1,2);
-plotSpectrum(signal, fs);
-subplot(3,1,3);
-plotSpectrum(signal_bb, fs);
+% figure('Name','Message and Signal');
+% subplot(3,1,1);
+% plotSpectrum(msg,fs);
+% subplot(3,1,2);
+% plotSpectrum(signal, fs);
+% subplot(3,1,3);
+% plotSpectrum(signal_bb, fs);
 
 %% Pass the signal into channels
 [signal_out1,~] = ricChan1(signal);     % Signal from Tx antenna 1
 sdr_out1 = sdr(signal_out1, fc, fs);
 msg_out1 = demodulator(sdr_out1);
 
-figure('Name','OUT Message, Signal, and SDR out signal');
-subplot(3,1,2);
-plotSpectrum(signal_out1,fs);
-subplot(3,1,1);
-plotSpectrum(msg_out1, fs);
-subplot(3,1,3);
-plotSpectrum(sdr_out1, fs);
+% figure('Name','OUT Message, Signal, and SDR out signal');
+% subplot(3,1,2);
+% plotSpectrum(signal_out1,fs);
+% subplot(3,1,1);
+% plotSpectrum(msg_out1, fs);
+% subplot(3,1,3);
+% plotSpectrum(sdr_out1, fs);
 
 [signal_out2, ~] = ricChan2(signal);    % Signal from Tx antenna 2
 sdr_out2 = sdr(signal_out2, fc, fs);
@@ -119,7 +123,7 @@ dfeObj.Weights = [0 1 0 0 0 0 0 0];
 
 eqRxSig = equalize(dfeObj,signal_out1);
 
-plot(real(eqRxSig),imag(eqRxSig),'+');
+% plot(real(eqRxSig),imag(eqRxSig),'+');
 
 
 %% Setup a timescope system object to view signal magnitude
