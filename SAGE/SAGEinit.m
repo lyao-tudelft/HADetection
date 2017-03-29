@@ -1,16 +1,16 @@
-function [ output_args ] = SAGEinit( y, L, M, I, u, fs, d, Ta, Tf )
-% Initialization phase of SAGE algorithm
+function [ output_args ] = SAGEinit( y, L, u, sys )
+% Initialization phase of SAGE algorithm. See details in SAGE paper IV.B
 %
 % y: superimposed received noise corrupted signal
 % L: estimated number of paths
-% M: number of receiving antennas
-% I: number of observing windows
 % u: transmitted signal
-% fs: sample rate
-% M: number of receving antennas
-% d: multiple to wavelength denating the distance among receiving antennas
-% Ta: observatin interval duration
-% Tf: interval of succesive observation intervals
+% sys: system information
+
+Ta = sys.Ta;    Tf = sys.Tf;
+fs = sys.fs;
+M = sys.M;
+d = sys.d;
+I = sys.I;
 
 lena = round(Ta*fs);
 lenf = round(Tf*fs);
@@ -26,11 +26,11 @@ theta = struct('tau', zero, 'phi', zero, 'fdopp', zero, 'amp', zero);   % Initia
 for miu = -(L-1):0
     l = M+miu;
 
-    xel_last = xel( y, l, theta(l), u, fs, M, d );     % Estimated x with estimated paramters from the last iteration
+    xel_last = xel( y, l, theta(l), u, sys );     % Estimated x with estimated paramters from the last iteration
 
     %% Estimate tau
     taumax = 2e-6;
-    tau = 0:20:taumax;
+    tau = linspace(0,taumax,20);
     %temps = zeros(length(u),1);
     tempsum = zeros(length(tau),1);
     tempsumm = zeros(length(tau),1);
@@ -56,7 +56,6 @@ for miu = -(L-1):0
     % Find the tau that maximize it
     [~,Itau] = max(tempsumm);
     tau_e = 0+(Itau-1)*(taumax/20);    % The delay estimation
-    theta(l).tau = tau_e;
     
     %% Estimate phi
     delay_a = round(theta(l).tau*fs);
@@ -64,9 +63,8 @@ for miu = -(L-1):0
                                             % estimated delay from the last iteration
     
     phimax = 2*pi;
-    phi = 0:90:phimax;
+    phi = linspace(0,phimax,90);
     c = zeros(M,length(phi));
-    xel_last = xel( y, l, theta(l), u, fs, M, d );
     sumphim = zeros(length(phi),1);
     
     % Computing the terms within the braces in (17) for each phi
@@ -85,9 +83,11 @@ for miu = -(L-1):0
     % Find the phi that maximize it
     [~, Iphi] = max(sumphim);
     phi_e = 0+(Iphi-1)*(phimax/90);     % The phi estimation
-    theta(l).phi = phi_e;
     
-    
+    %% Estimate doppler frequency
+    fdmax = 10;
+    fd = linspace(0,fdmax,10);  % Doppler frequency
+    z = zfun( xel, c, u, l, thetal, sys );
 end
 
 end

@@ -1,11 +1,12 @@
-function out = s( theta, u, fs, M, d )
+function out = s( theta, u, sys )
 % Received signal without noise corruption along path specified by theta
 %
 % theta: parameters of specified path
 % u: transmitted signal
-% fs: sample rate
-% M: number of receiving antennas
-% d: multiple to wavelength denating the distance among receiving antennas
+
+M = sys.M;
+d = sys.d;
+fs = sys.fs;
 
 ud = zeros(length(u),1);
 delay = round(theta.tau*fs);
