@@ -9,9 +9,9 @@ function out = xel( y, l, theta, u, sys )
 fs = sys.fs;
 M = sys.M;
 d = sys.d;
+L = sys.L;
 
 beta = 1;
-L = length(theta);
 
 % out = zeros(M, length(u));
 sig = cell(L, 1);
@@ -21,7 +21,7 @@ for i = 1:L
     summation = summation + sig{i};
 end
 
-out = sig{l} + beta*(y - summation);
+out = sig{l} + beta*(y' - summation);
 
 
 end

@@ -18,9 +18,11 @@ delay = round(thetal.tau*fs);
 ud = zeros(length(u),1);
 ud(delay+1:end) = u(1:end-delay);
 
-t = (1:1/fs:length(u)/fs)';
+t = 0:1/fs:(length(u)-1)/fs;
+tempsumm = 0;
 for i = 1:I
-    temp = conj(ud).*exp(-1i*2*pi*thetal.fdopp*t).*c.'*xel;
+
+    temp = conj(ud)'.*exp(-1i*2*pi*thetal.fdopp*t).*(c.'*xel);
     tempsum = sum(temp((i-1)*lenf+1:(i-1)*lenf+lena));
     tempsumm = tempsumm + tempsum;
 end
