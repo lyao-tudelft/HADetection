@@ -31,8 +31,8 @@ for miu = -(L-1):0
     xel_last = xel( y, l, theta, u, sys );     % Estimated x with estimated paramters from the last iteration
 
     %% Estimate tau
-    taumax = 0.5e-6;
-    tau = linspace(0,taumax,20);
+    taumax = 4e-6;
+    tau = linspace(0,taumax,500);
     %temps = zeros(length(u),1);
     tempsum = zeros(length(tau),1);
     tempsumm = zeros(length(tau),1);
