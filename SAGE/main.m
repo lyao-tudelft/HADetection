@@ -28,8 +28,8 @@ specDopplerShift_a = 98;  % Doppler shift of specular component (Hz)
 
 fs = 3.2e6;
 % delayVector = [1/fs,3/fs,5/fs,7/fs];
-delayVector = 7/fs;
-gainVector  = -2;
+delayVector = [2/fs 5/fs];
+gainVector  = [-2 -3];
 %% Setup Rician channel model
 ricChan1 = comm.RicianChannel( ...
     'SampleRate',              fs, ...
@@ -71,6 +71,7 @@ nFrame = 1000;
 msgLength = nFrame*frameLength;
 rb = fs;           % Bit rate
 Tb = 1/rb;                             % Duration of per bit
+msg_dur = msgLength*Tb;
 Lb = round(Tb*fs);    % Length of per bit after sampling
 frame = zeros(frameLength*Lb, 1);
 msg = zeros(msgLength*Lb, 1);
@@ -141,15 +142,9 @@ signalScope = dsp.TimeScope( ...
     'YLabel',     'Signal Magnitude', ...
     'MaximizeAxes','On');
 
-% signalScope([msg_out1, msg]);
-
-% Intiail Nulling begins
-% h1 = signal_out1./signal;           % Channel estimation for channel 1
-% h2 = signal_out2./signal;           % Channel estimation for channel 2
-
 %% SAGE
-numAnt = 'M';       M = 1;      % Number of receiving antennas
-numWin = 'I';       I = 10;     % Number of observing windows
+numAnt = 'M';       M = 2;      % Number of receiving antennas
+numWin = 'I';       I = 20;     % Number of observing windows
 sampFreq = 'fs';    rs = fs;   % Sample Rate
 lenWin = 'Ta';      Ta = 0.001;    % Length of observing windows
 intervWin = 'Tf';   Tf = 0.0015;    % Interval of observing windows
@@ -168,4 +163,7 @@ end
 
 theta = struct('tau', zero, 'phi', zero, 'fdopp', zero, 'amp', one);   % Initialize estimated parameters
 
-theta = SAGE( signal_outn1, msg, theta, sys );
+s1 = signal_outn1;
+s2 = signal_outn1*exp(1i*2*pi*d*cos(pi/6));
+s = [s1 s2];
+theta = SAGE( s, msg, theta, sys );

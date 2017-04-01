@@ -12,9 +12,10 @@ miu = 0;
 miumax = 10;
 
 theta_temp = theta;
-while distance >= threshold && miu <= miumax
+% while distance >= threshold && miu <= miumax
+while miu < miumax
     
-    miu = miu+1;
+    miu = miu+1
     theta_last = theta_temp;
     for l = 1:L
         xel_last = xel( y, l, theta, u, sys );
@@ -25,7 +26,7 @@ while distance >= threshold && miu <= miumax
             c(m) = exp(1i*2*pi*(m-1)*d*cos(theta_temp(l).phi));
         end
         
-        taumax = 2.5e-6;
+        taumax = 4e-6;
         tau = linspace(0,taumax,500);
         theta_t = theta_temp;
         for i = 1:length(tau)
