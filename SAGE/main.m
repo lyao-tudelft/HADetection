@@ -27,7 +27,9 @@ KFactor_a = 9;            % Linear ratio of specular power to diffuse power
 specDopplerShift_a = 98;  % Doppler shift of specular component (Hz)
 
 fs = 3.2e6;
-delayVector = [1/fs,3/fs,5/fs,7/fs];
+% delayVector = [1/fs,3/fs,5/fs,7/fs];
+delayVector = 7/fs;
+gainVector  = -2;
 %% Setup Rician channel model
 ricChan1 = comm.RicianChannel( ...
     'SampleRate',              fs, ...
@@ -100,6 +102,9 @@ signal = signal_bb.*cos(2*pi*fc*t');
 sdr_out1 = sdr(signal_out1, fc, fs);
 msg_out1 = demodulator(sdr_out1);
 
+[msg_bbout,~] = ricChan1(msg);
+signal_outn1 = msg_bbout + randn(length(msg_bbout),1);
+
 % figure('Name','OUT Message, Signal, and SDR out signal');
 % subplot(3,1,2);
 % plotSpectrum(signal_out1,fs);
@@ -149,7 +154,18 @@ sampFreq = 'fs';    rs = fs;   % Sample Rate
 lenWin = 'Ta';      Ta = 0.001;    % Length of observing windows
 intervWin = 'Tf';   Tf = 0.0015;    % Interval of observing windows
 dAnt = 'd';         d = 1;      % Multiple of wavelength denoting the distance among antennas
-numPath = 'L';      L = 5;
+numPath = 'L';      L = 4;
 
 sys = struct(numAnt, M, numWin, I, sampFreq, rs, lenWin, Ta, intervWin, Tf, dAnt, d, numPath, L);
-theta = SAGEinit( signal_out1, signal, sys );
+
+% theta = SAGEinit( signal_out1, signal, sys );
+zero = cell(L,1);
+one = cell(L,1);
+for i = 1:L
+    zero{i} = 0;
+    one{i} = 0;
+end
+
+theta = struct('tau', zero, 'phi', zero, 'fdopp', zero, 'amp', one);   % Initialize estimated parameters
+
+theta = SAGE( signal_outn1, msg, theta, sys );

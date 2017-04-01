@@ -1,4 +1,4 @@
-function out = zfun( xel, c, u, l, thetal, sys )
+function out = zfun( xel, c, u, thetal, sys )
 % z function according to (12) in SAGE paper
 %
 % xel: estimated received corrupted signal along 'l'th path

@@ -31,7 +31,7 @@ for miu = -(L-1):0
     xel_last = xel( y, l, theta, u, sys );     % Estimated x with estimated paramters from the last iteration
 
     %% Estimate tau
-    taumax = 2e-6;
+    taumax = 0.5e-6;
     tau = linspace(0,taumax,20);
     %temps = zeros(length(u),1);
     tempsum = zeros(length(tau),1);
@@ -104,7 +104,7 @@ for miu = -(L-1):0
     z = zeros(length(fd),1);
     for i = 1:length(fd)
         theta_t(1).fdopp = fd(i);
-        z(i) = abs(zfun(xel_last, cfd, u, l, theta_t(l), sys));
+        z(i) = abs(zfun(xel_last, cfd, u, theta_t(l), sys));
     end
     
     z;
@@ -115,7 +115,7 @@ for miu = -(L-1):0
     
     %% Estimate Amplitude
     Pu = sum(u.^2)/length(u);
-    a_e = 1/(I*norm(c)^2*Ta*Pu)*zfun(xel_last, cfd, u, l, theta_temp(l),sys);
+    a_e = 1/(I*norm(c)^2*Ta*Pu)*zfun(xel_last, cfd, u, theta_temp(l),sys);
     theta_temp(l).amp = a_e;
     
 end
