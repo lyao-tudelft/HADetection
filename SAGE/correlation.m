@@ -94,6 +94,9 @@ for ii=1:N_tot
                     end
                 end
             end
+            if kk==0
+                R(4)=0;
+            end
             R(5)=0;
             Rc(:,ii-1)=R';   %the number of path changed each time
             for j=1:10
