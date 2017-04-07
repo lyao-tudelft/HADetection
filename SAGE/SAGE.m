@@ -11,7 +11,7 @@ lena = round(Ta*fs);
 distance = inf;
 threshold = 1e-3;
 miu = 0;
-miumax = 2;
+miumax = 5;
 
 theta_temp = theta;
 % while distance >= threshold && miu <= miumax
@@ -78,7 +78,6 @@ while miu < miumax
         
         % Estimate amplitude amp
         Pu = sum(u.^2)/length(u);
-        zvalue=zfun(xel_last, cfd, u, theta_temp(l), sys)
         a_e = 1/(I*norm(cfd)^2*lena*Pu)*zfun(xel_last, cfd, u, theta_temp(l), sys);
         theta_temp(l).amp = a_e;
         

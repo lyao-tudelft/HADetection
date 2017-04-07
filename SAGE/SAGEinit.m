@@ -59,8 +59,7 @@ for miu = -(L-1):0
     % Find the tau that maximize it
     [~,Itau] = max(tempsumm);
     Itau;
-    tau = linspace(0,taumax,20);
-    tau_e = tau(Itau(1));    % The delay estimation
+    tau_e = tau(Itau);    % The delay estimation
     theta_temp(l).tau = tau_e;
     
     %% Estimate phi
@@ -88,7 +87,7 @@ for miu = -(L-1):0
     sumphim;
     % Find the phi that maximize it
     [~, Iphi] = max(sumphim);
-    phi_e = phi(Iphi(1));     % The phi estimation
+    phi_e = phi(Iphi);     % The phi estimation
     theta_temp(l).phi = phi_e;
     
     %% Estimate doppler frequency
@@ -110,12 +109,12 @@ for miu = -(L-1):0
     z;
     [~, Ifd] = max(z);
     Ifd;
-    fd_e = fd(Ifd(1));
+    fd_e = fd(Ifd);
     theta_temp(l).fdopp = fd_e;
     
     %% Estimate Amplitude
     Pu = sum(u.^2)/length(u);
-    a_e = 1/(I*norm(c)^2*Ta*Pu)*zfun(xel_last, cfd, u, theta_temp(l),sys);
+    a_e = 1/(I*norm(c)^2*lena*Pu)*zfun(xel_last, cfd, u, theta_temp(l),sys);
     theta_temp(l).amp = a_e;
     
 end

@@ -1,6 +1,12 @@
 function s = signalGenerator( u, CSI, sys )
+% Compute the noise and multipath attenuated signal as the ouput of
+% channel, whose CSI is defined in 'CSI'.
+%
+% u: the transmitted signal.
+% CSI: the predefined channel CSI including amplitude(amp), time delay(delay),
+%      Doppler frequency(fd) and drection of arrival(DoA) of each path.
+% sys: system information
 
-% CSI.delay    CSI.amp    CSI.fd    CSI.DoA
 L = length(CSI.delay);
 M = sys.M;
 d = sys.d;
