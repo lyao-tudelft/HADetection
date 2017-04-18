@@ -8,8 +8,8 @@ Ta = sys.Ta;
 fs = sys.fs;
 lena = round(Ta*fs);
 
-distance = inf;
-threshold = 1e-3;
+%distance = inf;
+%threshold = 1e-3;
 miu = 0;
 miumax = 5;
 
@@ -18,7 +18,7 @@ theta_temp = theta;
 while miu < miumax
     
     miu = miu+1
-    theta_last = theta_temp;
+    %theta_last = theta_temp;
     for l = 1:L
         xel_last = xel( y, l, theta, u, sys );
         
@@ -30,10 +30,10 @@ while miu < miumax
         
         taumax = 4e-6;
         tau = linspace(0,taumax,500);
-        theta_t = theta_temp;
+        %theta_t = theta_temp;
         for i = 1:length(tau)
-            theta_t(l).tau = tau(i);
-            z(i) = abs(zfun( xel_last, c, u, theta_t(l), sys ));
+            theta_temp(l).tau = tau(i);
+            z(i) = abs(zfun( xel_last, c, u, theta_temp(l), sys ));
         end
         [~,Itau] = max(z);
         tau_e = tau(Itau);
@@ -44,14 +44,14 @@ while miu < miumax
         phi = linspace(0,phimax,5);
         
         cphi = zeros(M,length(phi));
-        theta_t = theta_temp;
+        %theta_t = theta_temp;
         for j = 1:length(phi)
-            theta_t(l).phi = phi(j);
+            theta_temp(l).phi = phi(j);
             for m = 1:M
-                cphi(m,j) = exp(1i*2*pi*(m-1)*d*cos(theta_t(l).phi));
+                cphi(m,j) = exp(1i*2*pi*(m-1)*d*cos(theta_temp(l).phi));
             end
             
-            z(j) = abs(zfun( xel_last, cphi(:,j), u, theta_t(l), sys ));
+            z(j) = abs(zfun( xel_last, cphi(:,j), u, theta_temp(l), sys ));
         end
         [~, Iphi] = max(z);
         phi_e = phi(Iphi);
@@ -66,11 +66,11 @@ while miu < miumax
             cfd(m) = exp(1i*2*pi*(m-1)*d*cos(theta_temp(l).phi));
         end
     
-        theta_t = theta_temp;
+        %theta_temp = theta_temp;
         z = zeros(length(fd),1);
         for i = 1:length(fd)
-            theta_t(1).fdopp = fd(i);
-            z(i) = abs(zfun(xel_last, cfd, u, theta_t(l), sys));
+            theta_temp(1).fdopp = fd(i);
+            z(i) = abs(zfun(xel_last, cfd, u, theta_temp(l), sys));
         end
         [~, Ifd] = max(z);
         fd_e = fd(Ifd);
@@ -78,16 +78,16 @@ while miu < miumax
         
         % Estimate amplitude amp
         Pu = sum(u.^2)/length(u);
+        %zvalue=zfun(xel_last, cfd, u, theta_temp(l), sys);
         a_e = 1/(I*norm(cfd)^2*lena*Pu)*zfun(xel_last, cfd, u, theta_temp(l), sys);
         theta_temp(l).amp = a_e;
         
     end
     theta_out = theta_temp;
     
-    for i = 1:L
-        distance = sum(abs(theta_out(l).tau - theta_last(l).tau)) + sum(abs(theta_out(l).amp - theta_last(l).amp));
-    end
+    %for i = 1:L
+     %   distance = sum(abs(theta_out(l).tau - theta_last(l).tau)) + sum(abs(theta_out(l).amp - theta_last(l).amp));
+   % end
 end
-    
+    %theta_out = theta_temp;
 end
-
