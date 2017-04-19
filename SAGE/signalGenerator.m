@@ -1,4 +1,4 @@
-function s = signalGenerator( u, CSI, sys )
+function [s, s_n] = signalGenerator( u, CSI, sys )
 % Compute the noise and multipath attenuated signal as the ouput of
 % channel, whose CSI is defined in 'CSI'.
 %
@@ -6,6 +6,9 @@ function s = signalGenerator( u, CSI, sys )
 % CSI: the predefined channel CSI including amplitude(amp), time delay(delay),
 %      Doppler frequency(fd) and drection of arrival(DoA) of each path.
 % sys: system information
+%
+% s: signal received in the receiver without noise
+% s_n: noise corrupted s
 
 L = length(CSI.delay);
 M = sys.M;
@@ -27,7 +30,7 @@ for m = 1:M
     s(:,m) = sum(stemp,2);
 end
 
-s = s + sqrt(0.05)*randn(length(s),M);
+s_n = s + sqrt(0.2)*randn(length(s),M);
 
 end
 

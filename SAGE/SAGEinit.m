@@ -1,9 +1,12 @@
 function theta_out = SAGEinit( y, u, sys )
-% Initialization phase of SAGE algorithm. See details in SAGE paper IV.B
+% Initialization phase of SAGE algorithm by successive interference
+% cancellation. See details in SAGE paper IV.B
 %
 % y: superimposed received noise corrupted signal
 % u: transmitted signal
 % sys: system information
+%
+% theta_out: initialized channel parameters
 
 Ta = sys.Ta;    Tf = sys.Tf;
 fs = sys.fs;
