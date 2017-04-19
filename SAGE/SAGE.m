@@ -1,4 +1,12 @@
 function theta_out = SAGE( y, u, theta, sys )
+% Main phase of SAGE algorithm
+%
+% y: superimposed received signal
+% u: transmitted signal
+% theta: intialized channel parameters
+% sys: system information
+%
+% theta_out: result of estimated channel parameters
 
 L = sys.L;
 d = sys.d;
@@ -11,7 +19,7 @@ lena = round(Ta*fs);
 distance = inf;
 threshold = 1e-3;
 miu = 0;
-miumax = 5;
+miumax = 10;
 
 theta_temp = theta;
 % while distance >= threshold && miu <= miumax
